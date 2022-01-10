@@ -1,7 +1,7 @@
 const {Schema} = require('mongoose');
 
 const inventorySchema = new Schema({
-    title: {
+    name: {
         type: String,
     },
     created_at: {
@@ -11,7 +11,7 @@ const inventorySchema = new Schema({
     tags: [{
         type: String
     }],
-    category_ids: [{
+    categories: [{
         type: Schema.Types.ObjectId,
         ref: 'category'
     }],

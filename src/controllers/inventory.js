@@ -1,8 +1,8 @@
 const inventoryModel = require('../models/inventory');
 
 async function createInventory(req, res) {
-    let inventoryBody = res.body;
-    inventoryBody.created_at = new Date().getTime();
+    let inventoryBody = req.body;
+    inventoryBody['created_at'] = new Date().getTime();
 
     let result = await inventoryModel.createInventory(inventoryBody);
 

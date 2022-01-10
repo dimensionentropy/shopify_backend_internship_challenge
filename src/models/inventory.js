@@ -13,7 +13,10 @@ async function findInventoryWithObjectId(objectId) {
 
 async function createInventory(inventory) {
     let query = () => {
-        return new Inventory(inventory).save();
+        let newInventory = new Inventory(inventory);
+        newInventory.save();
+
+        return newInventory.populate('categories');
     }
 
     return dbHelper.execute(query);
@@ -23,7 +26,7 @@ async function findInventories() {
     let query = () => {
         return Inventory
             .find()
-            .populate('category_ids')
+            .populate('categories')
             .exec();
     }
 
@@ -38,7 +41,7 @@ async function updateInventory(inventoryId, updateInfo) {
     }
     inventory.save();
 
-    return inventory.populate('category_ids');
+    return inventory.populate('categories');
 }
 
 async function deleteInventory(inventoryId) {
