@@ -1,0 +1,79 @@
+html
+    head
+        title Update #{name}
+        script.
+
+            function updateInventory(event) {
+                event.preventDefault();
+
+                let form = event.target;
+
+                let categories = [];
+
+                let checkboxes = form.querySelectorAll("#categoriesInput input")
+                for (let i = 0; i < checkboxes.length; i++) {
+                    if (checkboxes[i].checked) {
+                        categories.push(checkboxes[i].value);
+                    }
+                }
+
+                let requestBody = {
+                    name: form.querySelector("input[name='name']").value,
+                    stock: form.querySelector("input[name='stock']").value,
+                    categories: categories
+                }
+
+                fetch('/inventories/' + "#{_id}", {
+                    method: 'PATCH',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(requestBody)
+                }).then(() => location.reload());
+
+            }
+
+            function loadCategories() {
+                let categoriesInput = document.querySelector('#categoriesInput');
+
+                let checkedBoxes = "#{categories}".split(",");
+
+                fetch("/categories", {
+                    method: "GET"
+                }).then(res => res.json())
+                .then((res) => {
+                    res.forEach(element => {
+                        let inputLine = document.createElement('span');
+                        inputLine.innerHTML = element.name;
+                        let checkbox = document.createElement("input");
+                        checkbox.type = "checkbox";
+                        checkbox.value = element._id;
+                        if (checkedBoxes.includes(element._id)) {
+                            checkbox.checked = true;
+                        }
+                        inputLine.appendChild(checkbox);
+
+                        categoriesInput.appendChild(inputLine);
+                    });
+                });
+
+            }
+
+            function initialize() {
+                loadCategories();
+            }
+
+            window.onload = initialize;
+    body
+        a(href="/") Back
+        div
+            form(onsubmit="return updateInventory(event)")
+                p
+                    label name
+                    input(name="name" value=name)
+                p
+                    label stock
+                    input(name="stock" value=stock)
+                p
+                    label categories
+                    p(id="categoriesInput")
+                p
+                    button(type="submit") Update

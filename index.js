@@ -2,9 +2,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const inventory = require('./src/controllers/inventory');
 const category = require('./src/controllers/category');
+const frontend = require('./src/controllers/frontend')
 
 const app = express();
 
+app.set('views', './src/views');
+app.set('view engine', 'pug');
+frontend(app);
 app.use(bodyParser.json());
 inventory(app);
 category(app);

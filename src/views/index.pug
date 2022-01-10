@@ -1,0 +1,166 @@
+html
+    head
+        title 123
+        script.
+
+            function createCategory(event) {
+                event.preventDefault();
+
+                let form = event.target;
+
+                let requestBody = {
+                    name: form.querySelector("input[name='name']").value,
+                }
+
+                fetch('/categories', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(requestBody)
+                }).then(() => location.reload());
+            }
+
+            function createInventory(event) {
+                event.preventDefault();
+
+                let form = event.target;
+
+                let categories = [];
+
+                let checkboxes = form.querySelectorAll("#categoriesInput input")
+                for (let i = 0; i < checkboxes.length; i++) {
+                    if (checkboxes[i].checked) {
+                        categories.push(checkboxes[i].value);
+                    }
+                }
+
+                let requestBody = {
+                    name: form.querySelector("input[name='name']").value,
+                    stock: form.querySelector("input[name='stock']").value,
+                    categories: categories
+                }
+
+                fetch('/inventories', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(requestBody)
+                }).then(() => location.reload());
+
+            }
+
+            function loadCategories() {
+                let categoriesInput = document.querySelector('#categoriesInput');
+
+                fetch("/categories", {
+                    method: "GET"
+                }).then(res => res.json())
+                .then((res) => {
+                    res.forEach(element => {
+                        let inputLine = document.createElement('span');
+                        inputLine.innerHTML = element.name;
+                        let checkbox = document.createElement("input");
+                        checkbox.type = "checkbox";
+                        checkbox.value = element._id;
+                        inputLine.appendChild(checkbox);
+
+                        categoriesInput.appendChild(inputLine);
+                    });
+                });
+
+            }
+
+            function generateOnclickDeleteFunction(inventoryId) {
+                let onclickDeleteFunction = () => {
+                    fetch('/inventories/' + inventoryId, {
+                        method: 'DELETE'
+                    }).then(() => location.reload());
+                }
+
+                return onclickDeleteFunction;
+            }
+
+            function getCategoryNames(categories) {
+                if (!categories || categories.length == 0) {
+                    return '';
+                }
+
+                let res = categories[0].name;
+                for (let i = 1; i < categories.length; i++) {
+                    res += "," + categories[i].name;
+                }
+                return res;
+            }
+
+            function loadInventories() {
+                let tableBody = document.querySelector('tbody');
+
+                fetch('/inventories', {
+                    method: 'GET'
+                }).then(res => res.json())
+                .then((res) => {
+                    res.forEach(element => {
+                        let tr = tableBody.insertRow();
+                        let newCell = tr.insertCell();
+                        newCell.appendChild(document.createTextNode(element.name));
+                        newCell = tr.insertCell();
+
+                        let categoryNames = getCategoryNames(element.categories);
+                        newCell.appendChild(document.createTextNode(categoryNames));
+
+                        newCell = tr.insertCell();
+                        newCell.appendChild(document.createTextNode(element.stock));
+
+                        newCell = tr.insertCell();
+                        let btn = document.createElement("BUTTON");
+                        btn.innerHTML = "delete";
+                        btn.onclick = generateOnclickDeleteFunction(element._id);
+                        newCell.appendChild(btn);
+
+                        let a = document.createElement("a");
+                        a.href = '/updateInventoryForm/' + element._id;
+                        a.innerHTML = "<button>modify</button>";
+                        newCell.appendChild(a);
+                    });
+                })
+
+            }
+
+            function initialize() {
+                loadInventories();
+                loadCategories();
+            }
+
+            window.onload = initialize;
+    body
+        div
+            table
+                thead
+                    tr
+                    th name
+                    th categories
+                    th stock
+                    th action
+                tbody
+        hr
+        h2 Create an inventory
+        div
+            form(onsubmit="return createInventory(event)")
+                p
+                    label name
+                    input(name="name")
+                p
+                    label stock
+                    input(name="stock")
+                p
+                    label categories
+                    p(id="categoriesInput")
+                p
+                    button(type="submit") create
+        hr
+        h2 Create an category
+        div
+            form(onsubmit="return createCategory(event)")
+                p
+                    label name
+                    input(name="name")
+                p
+                    button(type="submit") create

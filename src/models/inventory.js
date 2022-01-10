@@ -55,5 +55,6 @@ module.exports = {
     createInventory,
     findInventories,
     updateInventory,
-    deleteInventory
+    deleteInventory,
+    findInventoryWithObjectId
 }
