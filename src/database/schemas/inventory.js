@@ -8,6 +8,13 @@ const inventorySchema = new Schema({
         type: Date,
         required: [true, 'Created date is required']
     },
+    tags: [{
+        type: String
+    }],
+    category_ids: [{
+        type: Schema.Types.ObjectId,
+        ref: 'category'
+    }],
     stock: {
         type: Number
     },

@@ -1,12 +1,13 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const inventory = require('./src/controllers/inventory');
+const category = require('./src/controllers/category');
 
 const app = express();
 
-const hello = (req, res) => res.send({hello: 'world'});
-
-app.get('/', hello);
+app.use(bodyParser.json());
 inventory(app);
+category(app);
 
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
