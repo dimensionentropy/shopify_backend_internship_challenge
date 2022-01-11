@@ -1,5 +1,5 @@
-# Shopify Backend Intern Challenge
-This challenge is for applying for the backend intern [position](https://www.shopify.com/careers/backend-developer-intern-summer-2022-remote-us-canada_f29b717b-42d7-4d32-851b-e5b2c69a16c7)
+# Shopify SRE Intern Challenge
+This challenge is for applying for the backend intern [position](https://www.shopify.com/careers/infrastructure-site-reliability-engineering-intern-summer-2022-remote-us-canada_83dd0196-4389-4d45-9a2b-29f65a70e962)
 
 
 ## Online demo
